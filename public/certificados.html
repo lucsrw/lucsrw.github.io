@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lucas Rocha Will — Certificações.</title>
+  <meta name="description" content="Todos os certificados de Lucas Rocha Will, cursos e formações nas áreas de tecnologia, informática, segurança da informação, cibersegurança e inteligência artificial." />
+  <meta name="author" content="Lucas Rocha Will" />
+  <meta name="language" content="pt-BR" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="keywords" content="lucas will, lucas rocha, lucas rw, Lucas Rocha Will, certificados, certificados profissionais, certificados acadêmicos, cursos, formação, tecnologia, informática, segurança da informação, segurança cibernética, cibersegurança, inteligência artificial, engenharia de prompt" />
+  <meta name="theme-color" content="#0b0d10" />
+  <meta property="og:title" content="Lucas R. W. — Certificações." />
+  <meta property="og:description" content="Confira os certificados e cursos de Lucas Rocha Will nas áreas de tecnologia, informática, segurança da informação, cibersegurança e inteligência artificial." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Lucas R. W. — Certificações." />
+  <meta property="og:url" content="https://lucsrw.github.io" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Lucas Rocha Will — Minhas Certificações." />
+  <meta name="twitter:description" content="Esses são os certificados e cursos de Lucas Rocha Will em suas diversas áreas." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="content/css/certificacoes/style.css" />
+
+</head>
+<body class="page-cert">
+  <header class="topbar" id="top">
+    <div class="container">
+      <nav aria-label="Navegação principal">
+        <a class="brand" href="home.html" aria-label="Lucas Rocha Will — início">
+          <span class="brand-mark">L.</span>
+          <span>LUCAS ROCHA WILL</span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu">
+          <span class="menu-label">Menu</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+          <!-- Ajuste os nomes dos arquivos conforme o seu projeto -->
+          <a href="home.html#resumo">Resumo</a>
+          <a href="experiencias.html">Experiências</a>
+          <a href="projetos.html">Projetos</a>
+          <a href="certificados.html" aria-current="page">Certificados</a>
+          <a class="nav-links__contact" href="home.html#contato">Contato</a>
+        </div>
+
+        <a class="nav-cta" href="home.html#contato">Vamos conversar <svg class="icon accent" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Início da página ===== -->
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <h1><span class="hello">Cursos e qualificações</span>Meus<br><span class="nowrap"><span class="outline">certificados.</span></span></h1>
+          <p class="hero-copy">Cursos e formações em tecnologia, segurança da informação, cibersegurança e inteligência artificial. Pesquise, filtre e abra cada certificado sem sair da página.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#lista">Ver certificados <svg class="icon" aria-hidden="true"><use href="#i-arrow-down-right"></use></svg></a>
+            <a class="button ghost" href="home.html">Voltar ao início</a>
+          </div>
+        </div>
+
+        <div class="visual">
+          <div class="orbit"></div><div class="orbit orbit-two"></div>
+          <div class="orb-core orb-count">
+            <span id="total-cert">00</span>
+            <small>certificados</small>
+          </div>
+          <div class="floating-card fc-one">
+            <span class="fc-icon"><svg class="icon" aria-hidden="true"><use href="#i-compass"></use></svg></span>
+            <div><small class="mono">Foco</small><strong>Segurança &amp; IA</strong></div>
+          </div>
+          <div class="floating-card fc-two">
+            <span class="fc-icon"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg></span>
+            <div><small class="mono">Categorias</small><strong id="total-cat">0 áreas</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Lista ===== -->
+    <section class="section section--list" id="lista" aria-label="Lista de certificados">
+      <div class="container">
+        <div class="toolbar reveal">
+          <div class="search">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+            <label for="campo-busca" class="visualmente-oculto">Pesquisar certificados</label>
+            <input type="text" id="campo-busca" placeholder="Pesquisar por nome ou categoria" autocomplete="off" data-cursor="Buscar" />
+          </div>
+          <div class="filters" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+        </div>
+
+        <p class="result-info mono" id="info-resultado" aria-live="polite"></p>
+        <div class="cert-grid" id="grid-certificados" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Lucas Rocha Will.</span>
+      <a class="back-top" href="#inicio">Voltar ao topo <svg class="icon" aria-hidden="true"><use href="#i-arrow-up"></use></svg></a>
+    </div>
+  </footer>
+
+  <!-- ===== Visualizador de PDF ===== -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal">
+      <div class="modal__header">
+        <div class="modal__titles">
+          <p class="modal__title" id="modal-titulo">Título do certificado</p>
+          <p class="modal__subtitle" id="modal-subtitulo">Categoria</p>
+        </div>
+        <div class="modal__actions">
+          <a class="button ghost" id="modal-nova-aba" href="#" target="_blank" rel="noopener" aria-label="Abrir em nova aba"><svg class="icon" aria-hidden="true"><use href="#i-external-link"></use></svg><span>Nova aba</span></a>
+          <button type="button" class="icon-btn" id="modal-fechar" aria-label="Fechar visualização"><svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg></button>
+        </div>
+      </div>
+      <div class="modal__body">
+        <iframe id="modal-iframe" title="Visualização do certificado em PDF"></iframe>
+        <div class="modal__fallback" id="modal-fallback">
+          <p>Não foi possível exibir o PDF diretamente neste navegador.</p>
+          <a class="button primary" id="modal-fallback-link" href="#" target="_blank" rel="noopener">Abrir em Nova aba</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="content/js/certificacoes/main.js"></script>
+  <script src="content/js/icons.js"></script>
+  <script src="content/js/cursor.js"></script>
+</body>
+</html>
