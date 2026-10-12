@@ -31,11 +31,11 @@
   const icon = (name) =>
     `<svg class="icon" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
 
+  document.documentElement.classList.add('js');
+
   /* =========================================
      1. MENU MOBILE
   ========================================= */
-
-  document.documentElement.classList.add('js');
 
   const menuToggle = $('menuToggle');
   const navLinks = $('navLinks');
@@ -53,10 +53,7 @@
       const menuLabel = menuToggle.querySelector('.menu-label');
 
       if (menuIcon) {
-        menuIcon.setAttribute(
-          'href',
-          open ? '#i-x' : '#i-menu'
-        );
+        menuIcon.setAttribute('href', open ? '#i-x' : '#i-menu');
       }
 
       if (menuLabel) {
@@ -78,9 +75,15 @@
 
     const desktopQuery = window.matchMedia('(min-width: 901px)');
 
-    desktopQuery.addEventListener('change', (event) => {
-      if (event.matches) setMenu(false);
-    });
+    if (desktopQuery.addEventListener) {
+      desktopQuery.addEventListener('change', (event) => {
+        if (event.matches) setMenu(false);
+      });
+    } else if (desktopQuery.addListener) {
+      desktopQuery.addListener((event) => {
+        if (event.matches) setMenu(false);
+      });
+    }
   }
 
   /* =========================================
@@ -139,7 +142,9 @@
       { threshold: 0.12 }
     );
 
-    revealElements.forEach((element) => observer.observe(element));
+    revealElements.forEach((element) => {
+      observer.observe(element);
+    });
   } else {
     revealElements.forEach((element) => {
       element.classList.add('visible');
@@ -158,7 +163,7 @@
 
   /* =========================================
      6. CERTIFICADOS
-     Edite os dados abaixo.
+     As imagens são opcionais.
   ========================================= */
 
   const certificados = [
@@ -167,6 +172,8 @@
       instituicao: '',
       categoria: 'Cibersegurança',
       data: '',
+      cargaHoraria: '',
+      imagem: 'content/certificacoes/thumbs/seguranca-cibernetica.png',
       arquivo: 'content/certificacoes/seguranca-cibernetica.pdf',
       palavrasChave: [
         'segurança',
@@ -179,6 +186,8 @@
       instituicao: '',
       categoria: 'Segurança da Informação',
       data: '',
+      cargaHoraria: '',
+      imagem: 'content/certificacoes/thumbs/seguranca-da-informacao-para-todos.png',
       arquivo: 'content/certificacoes/seguranca-da-informacao-para-todos.pdf',
       palavrasChave: [
         'segurança',
@@ -191,6 +200,8 @@
       instituicao: '',
       categoria: 'Inteligência Artificial',
       data: '',
+      cargaHoraria: '',
+      imagem: 'content/certificacoes/thumbs/lideranca-em-ia.png',
       arquivo: 'content/certificacoes/lideranca-em-ia.pdf',
       palavrasChave: [
         'liderança',
@@ -203,6 +214,8 @@
       instituicao: '',
       categoria: 'Inteligência Artificial',
       data: '',
+      cargaHoraria: '',
+      imagem: 'content/certificacoes/thumbs/engenharia-de-prompt.png',
       arquivo: 'content/certificacoes/engenharia-de-prompt.pdf',
       palavrasChave: [
         'engenharia de prompt',
@@ -216,6 +229,8 @@
       instituicao: '',
       categoria: 'Inteligência Artificial',
       data: '',
+      cargaHoraria: '',
+      imagem: 'content/certificacoes/thumbs/inteligencia-artificial-generativa.png',
       arquivo: 'content/certificacoes/inteligencia-artificial-generativa.pdf',
       palavrasChave: [
         'inteligência artificial',
@@ -257,13 +272,15 @@
       ...new Set(certificados.map((item) => item.categoria))
     ];
 
-    const getTone = (category) =>
-      tones[categories.indexOf(category) % tones.length];
+    const getTone = (category) => {
+      const index = categories.indexOf(category);
+      return tones[(index < 0 ? 0 : index) % tones.length];
+    };
 
     let activeCategory = 'Todas';
     let lastFocused = null;
 
-    /* ----- Contadores ----- */
+    /* ----- CONTADORES ----- */
 
     const countUp = (element, target) => {
       if (!element) return;
@@ -271,10 +288,9 @@
       const format = (number) =>
         String(number).padStart(2, '0');
 
-      if (reduceMotion || target === 0) {
-        element.textContent = format(target);
-        return;
-      }
+      element.textContent = format(target);
+
+      if (reduceMotion || target === 0) return;
 
       const start = performance.now();
       const duration = 800;
@@ -285,21 +301,21 @@
           1
         );
 
-        const value = Math.round(
-          target * (1 - Math.pow(1 - progress, 3))
+        element.textContent = format(
+          Math.round(target * progress)
         );
-
-        element.textContent = format(value);
 
         if (progress < 1) {
           requestAnimationFrame(animate);
+        } else {
+          element.textContent = format(target);
         }
       };
 
       requestAnimationFrame(animate);
     };
 
-    /* ----- Filtros ----- */
+    /* ----- FILTROS ----- */
 
     const buildFilters = () => {
       filtersBox.innerHTML = ['Todas', ...categories]
@@ -336,6 +352,7 @@
             certificate.titulo,
             certificate.instituicao,
             certificate.categoria,
+            certificate.cargaHoraria,
             ...(certificate.palavrasChave || [])
           ].join(' '));
 
@@ -343,54 +360,80 @@
         });
     };
 
-    /* ----- Cartões ----- */
+    /* ----- CARTÕES ----- */
 
     const cardHTML = (certificate, position) => `
       <article
         class="cert-card"
         style="--i:${position}; --tone:${getTone(certificate.categoria)}"
       >
-        <div class="cert-top">
-          <span class="cert-icon">${icon('award')}</span>
-          <span class="tag">${esc(certificate.categoria)}</span>
+        <h2 class="cert-title">
+          ${esc(certificate.titulo)}
+        </h2>
+
+        <div class="cert-thumb">
+          ${
+            certificate.imagem
+              ? `
+                <img
+                  src="${esc(certificate.imagem)}"
+                  alt="Certificado: ${esc(certificate.titulo)}"
+                  loading="lazy"
+                />
+              `
+              : `
+                <div class="cert-thumb-placeholder">
+                  Prévia indisponivel.
+                </div>
+              `
+          }
         </div>
 
-        <h2 class="cert-title">${esc(certificate.titulo)}</h2>
+        <div class="cert-info">
+          <span class="tag">
+            ${esc(certificate.categoria)}
+          </span>
 
-        ${
-          certificate.instituicao
-            ? `<p class="cert-meta">${esc(certificate.instituicao)}</p>`
-            : ''
-        }
+          ${
+            certificate.instituicao
+              ? `<p class="cert-meta">${esc(certificate.instituicao)}</p>`
+              : ''
+          }
 
-        ${
-          certificate.data
-            ? `<p class="cert-meta">${esc(certificate.data)}</p>`
-            : ''
-        }
+          ${
+            certificate.data
+              ? `<p class="cert-meta">${esc(certificate.data)}</p>`
+              : ''
+          }
 
-        <div class="cert-actions">
-          <button
-            type="button"
-            class="button primary"
-            data-abrir="${certificate.originalIndex}"
-            data-cursor="Ver"
-          >
-            ${icon('eye')} Visualizar
-          </button>
-
-          <a
-            class="button ghost icon-only"
-            href="${esc(certificate.arquivo)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Abrir ${esc(certificate.titulo)} em nova aba"
-          >${icon('external-link')}</a>
+          ${
+            certificate.cargaHoraria
+              ? `<p class="cert-meta">${icon('clock')} ${esc(certificate.cargaHoraria)}</p>`
+              : ''
+          }
         </div>
+
+
+		<div class="cert-actions" >
+		  <button
+			type="button"
+			class="button primary cert-view-button"
+			data-abrir="${certificate.originalIndex}"
+			data-cursor="Abrir"
+			aria-label="Visualizar ${esc(certificate.titulo)}"
+		  >
+			<span class="cert-view-label">Visualizar</span>
+
+			<svg class="icon cert-arrow" aria-hidden="true">
+			  <use href="#i-arrow-right"></use>
+			</svg>
+		  </button>
+		</div>
+
       </article>
     `;
 
-    /* ----- Renderização ----- */
+    /* ----- RENDERIZAÇÃO ----- */
 
     const render = () => {
       const list = getFilteredCertificates();
@@ -404,7 +447,7 @@
           </div>
         `;
 
-        info.textContent = 'Sem resultados.';
+        info.textContent = '';
         return;
       }
 
@@ -417,17 +460,21 @@
         activeCategory !== 'Todas';
 
       info.textContent = filteredNow
-        ? `${list.length} de ${total} ${
-            plural(total, 'certificado', 'certificados')
-          } ${
-            plural(list.length, 'encontrado', 'encontrados')
-          }`
-        : `${total} ${
-            plural(total, 'certificado', 'certificados')
-          } no total`;
+        ? `${list.length} de ${total} ${plural(total, 'certificado', 'certificados')} ${plural(list.length, 'encontrado', 'encontrados')}`
+        : `${total} ${plural(total, 'certificado', 'certificados')} no total`;
+
+      // Se uma thumbnail não existir, mostra o espaço reservado.
+      $$('.cert-thumb img', grid).forEach((img) => {
+        img.addEventListener('error', () => {
+          const placeholder = document.createElement('div');
+          placeholder.className = 'cert-thumb-placeholder';
+          placeholder.textContent = 'Prévia indisponivel.';
+          img.replaceWith(placeholder);
+        }, { once: true });
+      });
     };
 
-    /* ----- Modal de visualização ----- */
+    /* ----- MODAL DOS CERTIFICADOS ----- */
 
     const openModal = (certificate) => {
       if (
@@ -498,7 +545,7 @@
       }
     };
 
-    /* ----- Eventos delegados ----- */
+    /* ----- EVENTOS ----- */
 
     filtersBox.addEventListener('click', (event) => {
       const button = event.target.closest('[data-categoria]');
@@ -560,7 +607,10 @@
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (
+        event.shiftKey &&
+        document.activeElement === first
+      ) {
         event.preventDefault();
         last.focus();
       } else if (
@@ -572,7 +622,7 @@
       }
     });
 
-    /* ----- Inicialização ----- */
+    /* ----- INICIALIZAÇÃO ----- */
 
     buildFilters();
     render();
@@ -583,9 +633,7 @@
 
     if (totalCategories) {
       totalCategories.textContent =
-        `${categories.length} ${
-          plural(categories.length, 'área', 'áreas')
-        }`;
+        `${categories.length} ${plural(categories.length, 'área', 'áreas')}`;
     }
   }
 })();
